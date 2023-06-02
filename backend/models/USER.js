@@ -46,10 +46,10 @@ const USERSCHEMA = mongoose.Schema({
           type:String,
           default:'user'
       },
-      createAt:{
-          type:Date,
-          default:Date.now
-      },
+          createAt:{
+               type:Date,
+               default:Date.now
+          },
 
 });
 
