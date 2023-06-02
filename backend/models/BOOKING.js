@@ -16,6 +16,10 @@ const BOOKINGSCHEMA =  mongoose.Schema({
             ref: 'SEAT',
           },
         ],
+      totalSeats: {
+        type:Number,
+        required:1,
+      },
      totalAmount: Number,
      status: {
      type: String,

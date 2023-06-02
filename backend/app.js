@@ -25,5 +25,7 @@ app.use('/api/v1',authRoute);
 const flightRoute = require("./routes/FlightRoutes");
 app.use('/api/v1',flightRoute);
 
+const bookingRoute = require("./routes/BookingRoutes");
+app.use('/api/v1',bookingRoute);
 
 module.exports= app;

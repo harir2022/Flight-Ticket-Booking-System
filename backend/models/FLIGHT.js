@@ -53,7 +53,7 @@ createdByUser:{
 });
 
 
-FLIGHTSCHEMA.pre('save', function (next) {
+FLIGHTSCHEMA.pre('validate', function (next) {
   try {
     if (this.isNew) {
       const seats = [];
@@ -84,6 +84,7 @@ FLIGHTSCHEMA.pre('save', function (next) {
       }
       this.seats = seats;
     }
+    
     next();
   } catch (error) {
       next(error);
