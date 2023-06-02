@@ -28,4 +28,8 @@ app.use('/api/v1',flightRoute);
 const bookingRoute = require("./routes/BookingRoutes");
 app.use('/api/v1',bookingRoute);
 
+
+const middlewares = require('./middlewares/Error')
+app.use(middlewares);
+
 module.exports= app;

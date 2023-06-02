@@ -101,7 +101,11 @@ FLIGHTSCHEMA.pre('remove', async function (next) {
     // Cancel all bookings associated with the flight
     await BOOKING.updateMany(
       { flight: flightId },
-      { $set: { status: 'Cancelled' } }
+      { $set: { 
+        status: 'Cancelled' ,
+        seats:[],
+        
+      } }
     );
 
     next();

@@ -10,15 +10,10 @@ const BOOKINGSCHEMA =  mongoose.Schema({
        ref: 'FLIGHT',
        required: true
      },
-     seats: [
-          {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'SEAT',
-          },
-        ],
+     seats: [ ],
       totalSeats: {
         type:Number,
-        required:1,
+        required:true,
       },
      totalAmount: Number,
      status: {
@@ -31,8 +26,12 @@ const BOOKINGSCHEMA =  mongoose.Schema({
           type: String,
           enum: ['Pending', 'Completed','Refunded'],
           default: 'Pending',
-    }
-},
+    },
+  },
+  bookedAt:{
+    type:Date,
+    default:Date.now
+}
      
    });
    

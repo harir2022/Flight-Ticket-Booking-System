@@ -20,8 +20,7 @@ class APIFeatures{
           return this;
     }
 
-    // keyword=apple&catogory= Food
-    // keyword=apple&catogory= Tech
+    
     filter(){
         let queryCopy ={...this.queryString};
         // console.log(queryCopy);

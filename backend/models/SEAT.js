@@ -14,5 +14,5 @@ const SEATSCHEMA = new mongoose.Schema({
         required: true,
       },
 });
-module.exports = SEATSCHEMA;
+// module.exports = SEATSCHEMA;
 module.exports = mongoose.model('SEAT',SEATSCHEMA);

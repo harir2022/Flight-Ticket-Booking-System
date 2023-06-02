@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const CatchAsyncError = require("../middlewares/CatchAsyncError");
+const ErrorHandler = require("../utils/ErrorHandler");
 const BOOKING = require("../models/BOOKING");
 const FLIGHT = require("../models/FLIGHT");
 
@@ -11,7 +11,7 @@ exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
      const flight = await FLIGHT.findById(flightId);
      
      if(!flight)
-           return next(new Error("Couldn't find flight"));
+           return next(new ErrorHandler("Couldn't find flight",404));
 
      
      let booking =[];
@@ -21,10 +21,10 @@ exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
      for(var book of bookingDetails) {
           
           const {requestedSeatNumber , requestedClass }= book;         
-          const mySeat = flight.seats.find((seat)=>seat.seatNumber===requestedSeatNumber && seat.class === requestedClass && seat.available);
+          const mySeat = await flight.seats.find((seat)=>seat.seatNumber===requestedSeatNumber && seat.class === requestedClass && seat.available);
 
           if(!mySeat)
-               return next(new Error("Seats not available"));
+               return next(new ErrorHandler("Seats not available",404));
           
           mySeat.available = false;
           flight.markModified('seats');// nested object updation in db
@@ -32,12 +32,13 @@ exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
           totalAmount+=mySeat.price;
           totalSeats++;
 
+          console.log(mySeat)
           
           booking.push(mySeat);
           
      }    
      
-     // console.log( booking)
+     console.log( booking)
      const booked = new BOOKING({
           user:userId,
           flight: flightId,
@@ -65,38 +66,41 @@ exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
 });
 
 exports.getSingleBooking = CatchAsyncError(async ( req, res, next ) => {
-     const {id} = req.params.id;
-     const booking = await BOOKING.findOne(id);
+     const id= req.params.id;
+     
+     const booking = await BOOKING.findById(id)
+                                   .populate('user')
+                                   .populate({
+                                        path:"flight",
+                                        select:"-seats"
+                                   })
+                                   
 
      if(!booking){
-          return next(new Error(`No booking found`));
+          return next(new ErrorHandler(`No booking found`,404));
      }
 
-     res.statusCode(200 ).json({
+     res.status(200 ).json({
           booking
      })
 });
 
 exports.getAllBookings = CatchAsyncError(async ( req, res, next ) => {
-     const id = req.user._id;
-     const booking = await BOOKING.find({user:id})
-     .populate('flight')
+     const id = req.user._id;     
+     const booking = await BOOKING.find({user:id})  
+     .populate('user')
      .populate({
-       path: 'seats',
-       model: 'Seat',
-       match: { available: false }, // Only populate booked seats
-       populate: {
-         path: 'flight',
-         model: 'Flight',
-       },
-     });
-     
+          path:"flight",
+          select:"-seats"
+     })
      
      if(!booking){
-          return next(new Error(`No booking found`));
+          return next(new ErrorHandler(`No booking found`,404));
      }
 
      res.status(200 ).json({
           booking
      });
+     
+  
 });
