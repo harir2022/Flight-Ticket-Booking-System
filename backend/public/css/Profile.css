@@ -1,0 +1,32 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.Navbar{
+    background-color: black;
+    
+}
+
+.Navbar ul{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.Navbar ul li a{
+    color: white;
+    text-decoration: none;
+    margin: 34px;
+    border-bottom: 1px solid white;
+    padding: 4px;
+}
+
+.profile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 25px;
+    background-color: gray;
+    
+}

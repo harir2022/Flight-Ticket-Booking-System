@@ -1,0 +1,24 @@
+ <link rel="stylesheet" href="css/Profile.css">
+ <nav class="Navbar">
+        <ul>
+            <li><a href="Home" >Home</a></li>
+             <li><a href="Search" >Search Flights</a></li> 
+             <li><a href="Book Tickets" >Book Flights</a></li> 
+            {{#if Name}}
+            <li>
+                {{#if admin}}
+                        <a href="AddFlights" >Add Flights</a>
+                        <a href="UpdateFlights" >Update Flights</a>
+                        <a href="RemoveFlights" >Remove Flights</a>
+                        <a href="FindBookings" >Get Booking Details</a>
+                {{/if}}
+                <a href="/api/v1/logout">Logout</a>
+            </li>
+            {{else}}
+            <li>
+                <a target="_blank"  href="Register" >Register</a> 
+                <a  target="_blank" href="Login" >Login</a>
+            </li>
+            {{/if}}
+        </ul>
+</nav>

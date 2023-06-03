@@ -6,13 +6,14 @@ const sendToken = ( user, statusCode, res)=>{
           httpOnly: true
      }
 
-
+     console.log(user)
      res.status(statusCode)
      .cookie('token' , token , options)
-     .json({
-          success:true,
-          token, 
-          user
-     })
+     .redirect('/profile')
+     // .json({
+     //      success:true,
+     //      token, 
+     //      user
+     // })
 }
 module.exports = sendToken

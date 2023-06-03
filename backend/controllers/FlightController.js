@@ -16,9 +16,14 @@ exports.getAllFlights =CatchAsyncError( async ( req, res, next ) => {
      if(!flights)
           return next(new ErrorHandler('No flights found',404));
 
-     res.json({
-               flights: flights
+     res.status(200)
+     .render('SearchFlight',{
+          done:true,
+          flights:flights
      });
+     // res.json({
+     //           flights: flights
+     // });
 })
 
 exports.getSpecificFlight =CatchAsyncError( async ( req, res, next ) => {

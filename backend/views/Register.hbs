@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/Register.css">
+    <title>Register</title>
+</head>
+<body>
+    <fieldset>
+        {{#if msg}}
+            <h1 class="{{msgtype}}">{{msg}}</h1>
+        
+        {{/if}}
+        <form action="/api/v1/register" method="post">
+            <div>
+            <input type="text" placeholder="Name" name="name"><br><br>
+            <input type="email" placeholder="Email" name="email"><br><br>
+            <input type="password" placeholder="Password" name="password"><br><br>
+            <input type="text" placeholder="Nationality" name="nationality"><br><br>
+            <input type="submit" value="Register"><br>
+            <a href="/login">Login </a>
+            </div>
+        </form>  
+        
+    </fieldset>
+    
+    
+</body>
+</html>

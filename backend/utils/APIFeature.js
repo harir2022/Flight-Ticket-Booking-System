@@ -11,11 +11,11 @@ class APIFeatures{
         const keyword = this.queryString.keyword ?{
             // checks field name with option of  case insensitive 
             airline:{
-                $regex:this.queryString.keyword,
+                $regex:new RegExp(this.queryString.keyword, 'i'),
                 $options:'i' ,
-            },
-                       
+            },                       
           }:{}
+          
           this.query=this.query.find({...keyword});                
           return this;
     }
@@ -26,6 +26,13 @@ class APIFeatures{
         // console.log(queryCopy);
         const toBeRemoved=['keyword'];
 
+        //handle unenterd fields
+        Object.entries(queryCopy).forEach(([key, value]) => {
+            if (!value) {
+              delete queryCopy[key];
+            }
+          });
+
         toBeRemoved.forEach(el =>  delete queryCopy[el]);
         // console.log(queryCopy);
 
@@ -34,6 +41,8 @@ class APIFeatures{
         // console.log(queryCopy)
         queryStr=queryStr.replace(/\b(gte|gt|lt|lte)\b/g , match=>`$${match}`)
         // console.log(queryCopy)
+
+        queryStr = queryStr.replace(/\"([^"]+)\":\s*\"([^"]+)\"/g, '"$1": { "$regex": "$2", "$options": "i" }');
 
         // console.log(JSON.parse(queryStr ));
         

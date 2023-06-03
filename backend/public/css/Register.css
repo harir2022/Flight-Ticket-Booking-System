@@ -1,0 +1,73 @@
+*{
+    margin: 0;padding: 0; box-sizing: border-box;
+}
+body{
+    background-color: darkorchid;
+}
+fieldset{
+    display: flex;
+    justify-content: center; align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    
+}
+
+form div{
+    display: flex;
+    justify-content: center; align-items: center;
+    flex-direction: column;
+    background-color: white;
+    margin: 15px;
+    padding: 25px;
+    
+}
+form input{
+    border:none;outline: none;
+    border-bottom: 1px solid blue;
+    padding: 10px 25px;
+    text-align: center;
+}
+
+form input[type=submit]{
+    background-color: rgb(53, 255, 53);
+    border: none;
+    width: 100%;
+    font-weight: bold;
+}
+
+
+.error{
+    color: blue;
+    background-color: white;
+    width: 50%;
+    padding: 20px;
+    text-align: center;
+    
+    font-weight: bolder;
+
+}
+
+.success{
+    width: 50%;
+    padding: 20px;
+    text-align: center;
+    
+    font-weight: bolder;
+    animation :blink  3s infinite ease-in-out;
+}
+
+@keyframes blink {
+    0%{
+        color: white;
+        background-color: black;
+    }
+    50%{
+        color: white;
+        background-color: white;
+    }
+    100%{
+        color: black;
+        background-color: white;
+    }
+}
