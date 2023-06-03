@@ -13,8 +13,8 @@ class APIFeatures{
             airline:{
                 $regex:this.queryString.keyword,
                 $options:'i' ,
-            }
-            
+            },
+                       
           }:{}
           this.query=this.query.find({...keyword});                
           return this;
@@ -31,15 +31,18 @@ class APIFeatures{
 
         //advance filter 
         let queryStr=JSON.stringify(queryCopy);
-        console.log(queryCopy)
+        // console.log(queryCopy)
         queryStr=queryStr.replace(/\b(gte|gt|lt|lte)\b/g , match=>`$${match}`)
-        console.log(queryCopy)
+        // console.log(queryCopy)
 
         // console.log(JSON.parse(queryStr ));
+        
 
         this.query=this.query.find(JSON.parse(queryStr));
         return this;
     }    
+
+    
 
     
 }

@@ -2,6 +2,7 @@ const CatchAsyncError = require("../middlewares/CatchAsyncError");
 const ErrorHandler = require("../utils/ErrorHandler");
 const BOOKING = require("../models/BOOKING");
 const FLIGHT = require("../models/FLIGHT");
+const APIFeatures = require("../utils/APIFeature");
 
 exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
      const {flightId, bookingDetails}      = req.body;
@@ -67,14 +68,15 @@ exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
 
 exports.getSingleBooking = CatchAsyncError(async ( req, res, next ) => {
      const id= req.params.id;
-     
-     const booking = await BOOKING.findById(id)
-                                   .populate('user')
-                                   .populate({
-                                        path:"flight",
-                                        select:"-seats"
-                                   })
-                                   
+     const booking = await BOOKING.findOne(
+          {    _id:id,
+               user:req.user._id 
+          }).populate('user')
+               .populate({
+                    path:"flight",
+                    select:"-seats"
+               })
+               
 
      if(!booking){
           return next(new ErrorHandler(`No booking found`,404));
@@ -85,7 +87,7 @@ exports.getSingleBooking = CatchAsyncError(async ( req, res, next ) => {
      })
 });
 
-exports.getAllBookings = CatchAsyncError(async ( req, res, next ) => {
+exports.getMyBookings = CatchAsyncError(async ( req, res, next ) => {
      const id = req.user._id;     
      const booking = await BOOKING.find({user:id})  
      .populate('user')
@@ -102,5 +104,38 @@ exports.getAllBookings = CatchAsyncError(async ( req, res, next ) => {
           booking
      });
      
-  
+     
 });
+
+//admin only routes
+exports.getAllBookings = CatchAsyncError(async function(req,res,next){
+     
+     const query  = (req.query);
+     const toFind = {}
+     Object.keys(query).forEach(
+          (key)=>{
+               const nk1 = key.split(".")[0]
+               const nk2 = key.split(".")[1]              
+               const obj={}
+               obj[nk2]= query[key]
+               toFind[nk1]=obj;               
+          }
+     )
+     
+     const books = await  BOOKING.find()
+     .populate('flight')
+     .exec()
+     
+     // console.log(Object.keys(toFind.flight))
+     let filteredBookings;
+     Object.keys(toFind.flight).forEach( key=>
+           filteredBookings = books.filter(booking => booking.flight[key] === toFind.flight[key])
+     );
+     
+     
+     res.json({
+          success:true,
+          bookings:filteredBookings
+     });
+
+})
