@@ -127,10 +127,13 @@ exports.getAllBookings = CatchAsyncError(async function(req,res,next){
      .exec()
      
      // console.log(Object.keys(toFind.flight))
-     let filteredBookings;
+     let filteredBookings=null;
      Object.keys(toFind.flight).forEach( key=>
            filteredBookings = books.filter(booking => booking.flight[key] === toFind.flight[key])
      );
+     if(!filteredBookings || filteredBookings.length === 0) {
+          return next(new ErrorHandler('Booking not found',404));
+     }
      
      
      res.json({
