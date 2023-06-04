@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Booking </title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+     {{> Navbar}}
+     
+        <div class="container">
+               {{#if booking}}
+                         <table class="table table-dark table-striped">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Booking Id </th>
+                                        <th scope="col">Flight Number - Flight Name</th>
+                                        <th scope="col">Class - Seat Number </th>
+                                        <th scope="col">Amount </th>
+                                   </tr>
+                                   {{#each booking}}
+                                    <tr>
+                                        <td scope="col">{{@index}}</td>
+                                        <td scope="col">{{_id}} </td>
+                                        <td scope="col">{{#if flight }} {{flight.flightNumber}} - {{flight.airline}} {{else}}<b>Flight has been Cancelled</b>{{/if}}</td>
+                                        <td scope="col">
+                                             {{#each seats}}
+                                                  {{class}} - {{seatNumber}},
+                                             {{/each}}
+                                        </td>
+                                        <td scope="col">{{totalAmount}}</td>
+                                   </tr>
+
+                                   {{/each }}
+                         </table>
+               {{else}}
+                    <p>No Booking has been done</p>
+               {{/if}}
+               <a href="/api/v1/bookings/me" class="btn btn-primary">refresh</a>
+                                   
+          </div>
+
+
+   
+<script>
+          document.addEventListener("submit",async(e)=>{
+               
+               e.preventDefault();
+               const bookingForm  = document.getElementById("bookingForm");
+
+               const obj ={};
+               obj["flightId"]=document.getElementById('flightId').value;
+               let bookingDetails=[];
+               let totalPrice =0;
+               for(const book of bookingForm){
+                    if(book.checked){
+                         const t = JSON.parse(book.value);
+                         totalPrice += t.price;
+                         bookingDetails.push({requestedClass:t.class,requestedSeatNumber:t.seatNumber});
+                    }
+               }
+               obj['bookingDetails'] = bookingDetails;
+
+               if(confirm(`Book the Tickets ? Total Cost :${totalPrice}`)){
+                              const result = await fetch('/api/v1/booking/new', {
+                                   method: 'POST',
+                                   headers: {
+                                        'Content-Type': 'application/json'
+                                   },
+                                   body: JSON.stringify(obj)
+                              })
+                              
+                              if ( !result.ok){
+                                   alert("Those Ticket are already booked!\nKindly Refresh the page");
+                              }
+                                   window.location.reload();                                                                  
+                              
+
+               }
+
+
+          });
+</script>
+
+              <!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+     
+</body>
+</html>

@@ -12,4 +12,11 @@ exports.customHBS =(hbs)=>{
           return !value;
         });
 
+
+        // Register a custom helper called "json"
+        hbs.registerHelper('json', function(context) {
+          return JSON.stringify(context);
+        });
+
+
 }

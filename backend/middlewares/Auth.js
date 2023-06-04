@@ -4,17 +4,28 @@ const USER = require('../models/USER')
 const catchASyncErrors = require('./CatchAsyncError');
 const ErrorHandler = require('../utils/ErrorHandler');
 
-// is user authenticated ? 
-exports.isAuthenticatedUser = catchASyncErrors(async (req,res,next)=>{
+exports.isLoginUser = catchASyncErrors(async (req,res,next)=>{
     const {token} = req.cookies;
     if(!token) {
-        return next(new ErrorHandler('LOGIN FIRST TO ACCESS THE RESOURCES',403));
+        return next();
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await USER.findById(decoded.id); // forgot to put await troubled roles;
     
     next();
 }); 
+// is user authenticated ? 
+exports.isAuthenticatedUser = catchASyncErrors(async (req,res,next)=>{
+    const {token} = req.cookies;
+    if(!token) {
+        res.redirect('/login')
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await USER.findById(decoded.id); // forgot to put await troubled roles;
+    
+    next();
+}); 
+
 
 
 // who is this user ? admin or user ;

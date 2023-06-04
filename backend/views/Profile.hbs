@@ -11,11 +11,13 @@
    {{> Navbar}}
     <div class="profile"> 
         <img src="/images/p1.jpg" alt="" width="250px">
-        Details
-        <h2>{{Name}}</h2>
-        <h3>{{Nationality}}</h3>
-        <h3>{{Email}}</h3>
-        <h3>{{admin}}</h3>
+        <h1>Details</h1><hr>
+        <h2>Name:{{Name}}</h2>
+        <h3>Nationality:{{Nationality}}</h3>
+        <h3>Email:{{Email}}</h3>
+        {{#if admin}}
+            <h2>Your are Admin</h2>
+        {{/if}}
     </div>
 </body>
 </html>

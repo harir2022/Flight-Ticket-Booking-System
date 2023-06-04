@@ -8,6 +8,7 @@ exports.newBooking = CatchAsyncError(async ( req, res, next ) => {
      const {flightId, bookingDetails}      = req.body;
      // TODO:
      const userId =req.user._id;
+     
 
      const flight = await FLIGHT.findById(flightId);
      
@@ -88,8 +89,8 @@ exports.getSingleBooking = CatchAsyncError(async ( req, res, next ) => {
 });
 
 exports.getMyBookings = CatchAsyncError(async ( req, res, next ) => {
-     const id = req.user._id;     
-     const booking = await BOOKING.find({user:id})  
+     const user = req.user     
+     const booking = await BOOKING.find({user:user._id})  
      .populate('user')
      .populate({
           path:"flight",
@@ -100,9 +101,20 @@ exports.getMyBookings = CatchAsyncError(async ( req, res, next ) => {
           return next(new ErrorHandler(`No booking found`,404));
      }
 
-     res.status(200 ).json({
+     console.log("booking.........")
+
+     res.render("BookingDetails",{
+          user:user._id,
+          Name: user && user.name,
+          Email: user && user.email,
+          Nationality: user && user.nationality,
+          admin: user &&   (user.role==='admin'),
           booking
-     });
+     })
+
+     // res.status(200 ).json({
+     //      booking
+     // });
      
      
 });

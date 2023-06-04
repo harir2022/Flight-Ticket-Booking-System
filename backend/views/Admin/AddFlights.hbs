@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Booking </title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+     {{> Navbar}}
+     
+        <div class="container">
+          <form action="/api/v1/admin/flights/new" method="post" id="form">
+          <label class="form-label"  for="airline">Airline</label>
+                         <input class="form-control" type="text" name="airline" value="{{airline}}"/><br/>
+                         <label class="form-label"  for="flightNumber">flightNumber</label>
+                         <input class="form-control" type="text" name="flightNumber" value="{{flightNumber}}"/><br/>
+                         <label class="form-label"  for="departureCity">departureCity</label>
+                         <input class="form-control" type="text" name="departureCity" value="{{departureCity}}"/><br/>
+                         <label class="form-label"  for="arrrivalCity">arrrivalCity</label>
+                         <input class="form-control" type="text" name="destinationCity" value="{{destinationCity}}"/><br/>
+                         <label class="form-label"  for="departureDate">departureDate</label>
+                         <input class="form-control" type="datetime-local" name="departureDate" value="{{departureDate}}"/><br/>
+                         <label class="form-label"  for="arrivalDate">arrivalDate</label>
+                         <input class="form-control" type="datetime-local" name="arrivalDate" value="{{departureTime}}"/><br/>
+                         <label class="form-label"  for="departureTime">departureTime</label>
+                         <input class="form-control" type="time" name="departureTime" value="{{arrivalDate}}"/><br/>
+                         <label class="form-label"  for="arrivalTime">arrivalTime</label>
+                         <input class="form-control" type="time" name="arrivalTime" value="{{arrivalTime}}"/><br/>
+                         <label class="form-label"  for="availableSeats">availableSeats</label>
+                         <input class="form-control" type="number" name="availableSeats" value="{{availableSeats}}"/><br/>
+                         <input type="submit" value="Add">
+          </form>
+                       
+          </div>
+
+<script>
+     const form=document.getElementById("form");
+     document.addEventListener("submit",async (e)=>{
+          e.preventDefault();
+          const result= await fetch("api/v1/admin/flights/new",{
+               method: "POST",
+               body: JSON.stringify(form),
+          });
+          if ( !result.ok){
+                    alert("Those Flights Can't be added!\nKindly Refresh the page");
+          }
+          window.location.reload();
+     });
+</script>
+
+
+              <!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+     
+</body>
+</html>

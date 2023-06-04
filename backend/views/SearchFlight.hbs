@@ -15,6 +15,7 @@
        
         <form action="/api/v1/flights" method="get" class="row">
             <div>
+               <center><h3>Use those Filters to find the flights</h3></center><hr>
             <input type="text" placeholder="Airline Name" name="keyword"><br><br>
             <input type="date" placeholder="Departure Date" name="departureDate"><br><br>
             <input type="date" placeholder="Arrival Date" name="arrivalDate"><br><br>
@@ -23,7 +24,8 @@
             <input type="submit" value="Search"><br>
             
             </div>
-        </form>  
+        </form>
+         
 
          {{#if done}}
               <div class="row">
@@ -39,30 +41,10 @@
                          <p class="time">Departure Time: {{departureTime}}</p>
                          <p class="time">Arrival Time: {{arrivalTime}}</p>
                          <p class="time">Available Seats: {{availableSeats}}</p>
-
-                         <div class="container">
-                                   <form action="/api/v1/booking/new" method="post" id="bookingForm">
-                                        <div class="container">
-                                             
-                                             <input type="hidden" name="flightId" disabled value="{{_id}}" id="flightId">
-                                             <br>
-                                        {{#each seats}}
-                                                       {{#ifDivisibleBy @index  15 }}
-                                                            <br/>
-                                                       {{/ifDivisibleBy}}
-                                                       <div class="col-md-1">
-                                                                 <label for="{{this}}"> {{this.seatNumber}}</label>
-                                                                 <input type="checkbox" id="{{this.seatNumber}}"  name="seats[]" value="{{this}}"  {{#if (not this.available)}}disabled{{/if}}/>                                        
-                                                       </div>
-                                        {{/each}}
-                                        
-                                        </div>
-                                        
-                                   
-                                        <input type="submit" class="btn btn-success" value="Book">
-                                   
-                                   </form>
-                              </div>
+                         <a href="/Booking?flightId={{_id}}" class="btn btn-primary">Booking</a>  
+                           {{#if ../admin}}
+                              <button class="btn btn-danger" onclick="removeFlightRequest(`{{_id}}`)">Remove Flight</button>
+                         {{/if}}
                     </li>
                     {{/each}}
                
@@ -76,60 +58,22 @@
     </fieldset>
     
 
-    
-<script>
-     const bookingForm  = document.getElementById("bookingForm");
-     bookingForm.addEventListener('submit', function(e){
-       e.preventDefault(); // Prevent the form from submitting
-          
-        // Get all selected seat checkboxes
-        var selectedSeats = document.querySelectorAll("input[type='checkbox'][name='seats[]']:checked");
-          
-               
-        var bookingDetails = [];
-
-        
-        selectedSeats.forEach(function(checkbox) {
-            var seatNumber = checkbox.value.seatNumber;
-            var seatClass = checkbox.value.class;
-
-            {{!-- // Create the booking details object
-            var bookingDetail = {
-                requestedClass: seatClass,
-                requestedSeatNumber: seatNumber
-            };
-
-            // Add the booking detail to the array
-            bookingDetails.push(bookingDetail); --}}
-            
-        });
-
-
-        {{!-- // Create the booking data object
-        var bookingData = {
-            flightId: document.getElementById('flightId').value;
-            bookingDetails: bookingDetails
-        }; // Convert the booking data object to JSON string
-        var jsonData = JSON.stringify(bookingData);
-
-        // Create a hidden field for the JSON data
-        var jsonDataField = document.createElement("input");
-        jsonDataField.type = "hidden";
-        jsonDataField.name = "jsonData";
-        jsonDataField.value = jsonData;
-
-        // Append the hidden field to the form
-        bookingForm.appendChild(jsonDataField);
-
-     console.log(bookingForm);
-        // Submit the form
-        bookingForm.submit(); --}}
-
-       alert(bookingData)
-   
-     });
-
+    <script >
+          async function removeFlightRequest(id){
+               console.log(id);
+               const result  = await fetch(`/api/v1/admin/flights/${id}`,{
+                    method:'DELETE',
+               }
+                    )
+               if ( !result.ok){
+                         alert("The Error Occured ..\nKindly Refresh the page and try again");
+               }
+               window.location.reload();
+          }
     </script>
+
+ 
+
     <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 

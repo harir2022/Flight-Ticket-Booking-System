@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Booking </title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+     {{> Navbar}}
+        <div class="container">
+               {{#if flightId}}
+               
+                                   <form action="/api/v1/booking/new" method="post" id="bookingForm">
+                                   <div class="container">
+                                             <div class="row">
+                                                  <h1 class="text-center">{{airline}} - {{flightNo}}</h1>
+                                             </div>
+                                             <div class="row">
+                                                  <div class="col-md-12">
+                                                       <h4 class="text-success">{{departureCity}}  <b> to  </b> {{arrivalCity}}</h4>
+                                                       <h4 class="text-success">Starts at <b>{{departureDate}} </b>ends at <b>{{ arrivalDate}}</b></h4>
+                                                       <h4 class="text-success">Available Seats : {{availableSeats}}</h4>
+                                                  </div>
+                                             </div>
+
+                                   </div>
+                                        <input type="hidden" name="flightId" disabled value="{{flightId}}" id="flightId">
+                                        <div class="container">
+                                             
+                                             <br>
+                                        {{#each seats}}
+                                                       {{#ifDivisibleBy @index  15 }}
+                                                            <br/>
+                                                       {{/ifDivisibleBy}}
+                                                       <div class="col-md-1">
+                                                                 <label for="{{this}}"> {{this.seatNumber}}</label>
+                                                                 <input type="checkbox" id="{{this.seatNumber}}"  name="seats[]" value="{{json this}}"  {{#if (not this.available)}}disabled{{/if}}/>                                        
+                                                       </div>
+                                        {{/each}}
+                                        
+                                        </div>
+                                        
+                                        <input type="submit" class="btn btn-success" value="Book">
+                                   
+                                   </form>
+
+               {{else}}
+                    <p>No Flight has been selected</p>
+
+               {{/if}}
+                                   
+          </div>
+
+
+   
+<script>
+          document.addEventListener("submit",async(e)=>{
+               
+               e.preventDefault();
+               const bookingForm  = document.getElementById("bookingForm");
+
+               const obj ={};
+               obj["flightId"]=document.getElementById('flightId').value;
+               let bookingDetails=[];
+               let totalPrice =0;
+               for(const book of bookingForm){
+                    if(book.checked){
+                         const t = JSON.parse(book.value);
+                         totalPrice += t.price;
+                         bookingDetails.push({requestedClass:t.class,requestedSeatNumber:t.seatNumber});
+                    }
+               }
+               obj['bookingDetails'] = bookingDetails;
+
+               if(confirm(`Book the Tickets ? Total Cost :${totalPrice}`)){
+                              const result = await fetch('/api/v1/booking/new', {
+                                   method: 'POST',
+                                   headers: {
+                                        'Content-Type': 'application/json'
+                                   },
+                                   body: JSON.stringify(obj)
+                              })
+                              
+                              if ( !result.ok){
+                                   alert("Those Ticket are already booked!\nKindly Refresh the page");
+                              }
+                                   window.location.reload();                                                                  
+                              
+
+               }
+
+
+          });
+</script>
+
+              <!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+     
+</body>
+</html>

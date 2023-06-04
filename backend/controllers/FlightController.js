@@ -15,9 +15,13 @@ exports.getAllFlights =CatchAsyncError( async ( req, res, next ) => {
 
      if(!flights)
           return next(new ErrorHandler('No flights found',404));
-
+     const user = req.user;
      res.status(200)
      .render('SearchFlight',{
+          Name: user && user.name,
+          Email: user && user.email,
+          Nationality: user && user.nationality,
+          admin: user &&   (user.role==='admin'),
           done:true,
           flights:flights
      });

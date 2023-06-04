@@ -3,15 +3,18 @@
         <ul>
             <li><a href="Home" >Home</a></li>
              <li><a href="Search" >Search Flights</a></li> 
-             <li><a href="Book Tickets" >Book Flights</a></li> 
+             <li><a href="Booking" >Book Flights</a></li> 
+             <li><a href="BookingDetails" >My Bookings </a></li> 
             {{#if Name}}
             <li>
                 {{#if admin}}
-                        <a href="AddFlights" >Add Flights</a>
-                        <a href="UpdateFlights" >Update Flights</a>
-                        <a href="RemoveFlights" >Remove Flights</a>
-                        <a href="FindBookings" >Get Booking Details</a>
+                        
+                        <a href="AddFlights"   >Add Flights</a>
+                        <a href="UpdateFlights"  >Update Flights</a>
+                        <a href="RemoveFlights"  >Remove Flights</a>
+                        <a href="FindBookings"  >Get Booking Details</a>
                 {{/if}}
+                <a href="Profile">Profile</a>
                 <a href="/api/v1/logout">Logout</a>
             </li>
             {{else}}
