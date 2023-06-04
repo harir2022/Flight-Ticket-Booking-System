@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Booking </title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+     {{> Navbar}}
+           <table class="table table-dark table-striped">
+               <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Booking Id </th>
+                    <th scope="col">User Id </th>
+                    <th scope="col">Flight Number - Flight Name</th>
+                    <th scope="col">From - To </th>
+                    <th scope="col">TotalSeats </th>
+                    <th scope="col">TotalAmount </th>
+                    <th scope="col">BookedAt </th>
+                    <th scope="col">Status </th>
+               </tr>
+               <tbody id="bookingList">
+
+               </tbody>
+          </table>
+
+
+   
+<script>
+     const bookingsList = document.querySelector('#bookingsList');
+     function updateList(bookings) {
+          bookingList.innerHTML = "";
+          bookings.forEach(function(booking, index) {
+                         const row = document.createElement("tr");
+
+                         const rowNumber = document.createElement("th");
+                         rowNumber.setAttribute("scope", "row");
+                         rowNumber.textContent = index + 1;
+                         row.appendChild(rowNumber);
+
+                         const bookingId = document.createElement("td");
+                         bookingId.textContent = booking._id;
+                         row.appendChild(bookingId);
+
+                         const userId = document.createElement("td");
+                         userId.textContent = booking.user;
+                         row.appendChild(userId);
+
+                         const flightInfo = document.createElement("td");
+                         flightInfo.textContent = booking.flight && (booking.flight.flightNumber + " - " + booking.flight.airline);
+                         row.appendChild(flightInfo);
+
+                         const fromTo = document.createElement("td");
+                         fromTo.textContent =    booking.flight && (booking.flight.departureCity +  `   ${(booking.flight.departureDate)}   ` + " - " +   booking.flight.destinationCity +  `     ${(booking.flight.arrivalDate)} `)
+                         row.appendChild(fromTo);
+
+
+                         const totalSeats = document.createElement("td");
+                         totalSeats.textContent = booking.totalSeats;
+                         row.appendChild(totalSeats);
+
+                         const totalAmount = document.createElement("td");
+                         totalAmount.textContent = booking.totalAmount;
+                         row.appendChild(totalAmount);
+
+                         const bookedAt = document.createElement("td");
+                         bookedAt.textContent = booking.bookedAt;
+                         row.appendChild(bookedAt);
+                         
+
+                         const status = document.createElement("td");
+                         status.textContent = booking.status;
+                         row.appendChild(status);
+
+
+                         // Append the row to the bookingTableBody
+                         bookingList.appendChild(row);
+                    });
+     }
+
+         window.onload = async function() {
+            const response = await fetch("/api/v1/admin/bookings", {
+              method: "GET",
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              const bookings = data.bookings;
+               updateList(bookings);
+
+            } else {
+              console.log("Failed to fetch bookings data.");
+            }
+          }
+</script>
+
+              <!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+     
+</body>
+</html>

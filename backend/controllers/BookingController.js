@@ -123,6 +123,18 @@ exports.getMyBookings = CatchAsyncError(async ( req, res, next ) => {
 exports.getAllBookings = CatchAsyncError(async function(req,res,next){
      
      const query  = (req.query);
+     console.log(query)
+     if(!query || Object.keys(query) == 0){
+          const books = await  BOOKING.find()
+          .populate('flight')
+          .exec()
+          
+               return res.json({
+                    success:true,
+                    bookings:books
+               });
+     }
+
      const toFind = {}
      Object.keys(query).forEach(
           (key)=>{

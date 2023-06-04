@@ -158,6 +158,16 @@ Router.get(['/Booking'],isAuthenticatedUser,async(req,res,next )=>{
           });
       });
  
+      Router.get('/FindBookings', isAuthenticatedUser,isAuthenticatedRole('admin'),async(req,res)=>{
+          const user = req.user;
+               res.render('FindBookings',{
+                    Name: user && user.name,
+                    Email: user && user.email,
+                    Nationality: user && user.nationality,
+                    admin: user &&   (user.role==='admin'),
+               });
+      });
+
 
 // Router.route('/admin/flights/new').post(isAuthenticatedUser,isAuthenticatedRole('admin'),addFlight);
 
