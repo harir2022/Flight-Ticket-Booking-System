@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/SearchFlight.css">
+    
     <title>Search Flights</title>
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     
@@ -13,7 +13,7 @@
    {{> Navbar}}
    <fieldset class="container">
        
-        <form action="/api/v1/flights" method="get" class="row">
+        <form action="/" method="get" class="row">
             <div>
                <center><h3>Use those Filters to find the flights</h3></center><hr>
             <input type="text" placeholder="Airline Name" name="keyword"><br><br>
@@ -21,7 +21,7 @@
             <input type="date" placeholder="Arrival Date" name="arrivalDate"><br><br>
             <input type="text" placeholder="Departure City" name="arrivalCity"><br><br>
             <input type="text" placeholder="Arrival City" name="departureCity"><br><br>
-            <input type="submit" value="Search"><br>
+            <input type="button" value="Search" onclick="searchMyFlights()"><br>
             
             </div>
         </form>
@@ -54,11 +54,28 @@
           </ul>
           </div>
           {{/if}}
-        
     </fieldset>
+        
     
 
     <script >
+           function searchMyFlights(){
+               // get the flights
+               const xhttp = new XMLHttpRequest();
+               const flightForm = document.getElementById('flightForm');
+
+               const form = new FormData(flightForm);
+
+               xhttp.onload = function() {
+                         renderData(JSON.parse(this.responseText).flights)
+               }
+               xhttp.open("GET", "/api/v1/flights?"+new URLSearchParams(form),true);
+               xhttp.setRequestHeader("Content-type", "application/json");
+               xhttp.setRequestHeader("Accept", "application/json");
+               xhttp.send(); 
+                                      
+          }
+          
           async function removeFlightRequest(id){
                console.log(id);
                const result  = await fetch(`/api/v1/admin/flights/${id}`,{
@@ -70,6 +87,7 @@
                }
                window.location.reload();
           }
+    
     </script>
 
  

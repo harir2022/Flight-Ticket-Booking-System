@@ -13,21 +13,26 @@ exports.getAllFlights =CatchAsyncError( async ( req, res, next ) => {
      //use await 
      const flights =await  api.query;
 
+
      if(!flights)
           return next(new ErrorHandler('No flights found',404));
      const user = req.user;
-     res.status(200)
-     .render('SearchFlight',{
-          Name: user && user.name,
-          Email: user && user.email,
-          Nationality: user && user.nationality,
-          admin: user &&   (user.role==='admin'),
-          done:true,
-          flights:flights
-     });
-     // res.json({
-     //           flights: flights
-     // });
+     if (req.headers.accept === 'application/json') {
+          res.json({
+                    admin: user &&   (user.role==='admin'),
+                    flights: flights
+          });
+     } else {
+          
+          res.status(200).render('SearchFlight',{
+               Name: user && user.name,
+               Email: user && user.email,
+               Nationality: user && user.nationality,
+               admin: user &&   (user.role==='admin'),
+               done:true,
+               flights:flights
+          });
+     }
 })
 
 exports.getSpecificFlight =CatchAsyncError( async ( req, res, next ) => {

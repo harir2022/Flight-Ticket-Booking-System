@@ -47,7 +47,42 @@
                                    </form>
 
                {{else}}
-                    <p>No Flight has been selected</p>
+                    
+                      <form action="/api/v1/flights" method="get" class="row" id="flightForm" style="display: flex; align-items: center; justify-content: center; margin-bottom: 30px;">
+                         <div>
+                              <center><h3>Use those Filters to find the flights</h3></center><hr>
+                         <input type="text" placeholder="Airline Name" name="keyword">
+                         
+                         <br><br>
+                                   <label for="Departure">Departure Date and time</label>
+                         <div style="display: flex;">
+                                   <input type="date" placeholder="Departure Date" name="departureDate">
+                                   <input type="time" placeholder="Departure Date" name="departureTime">
+                         </div>
+                         <br><br>
+                                   <label for="Arrival">Arrival Date and time</label>
+                         <div style="display: flex;">
+                                   <input type="date" placeholder="Arrival Date" name="arrivalDate">
+                                   <input type="time" placeholder="Arrival Date" name="arrivalTime">
+                         </div>
+                         <br><br>
+
+                         <div style="display: flex;">
+                              <input type="text" placeholder="Departure City" name="departureCity">
+                              <input type="text" placeholder="Arrival City" name="destinationCity">
+                         </div>
+                         <br><br>
+                         <input type="button" value="Search" onclick="searchMyFlights()"><br>
+                         
+                         </div>
+                    </form>
+
+
+                         <ol id="myflights">
+
+                         </ol>
+
+
 
                {{/if}}
                                    
@@ -56,7 +91,25 @@
 
    
 <script>
-          document.addEventListener("submit",async(e)=>{
+        window.onload = async function() {
+            const response = await fetch("/api/v1/flights", {
+              method: "GET",
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+               
+               renderData(data.flights, data.admin)
+            } else {
+              console.log("Failed to fetch bookings data.");
+            }
+     }
+
+          const bookingForm = document.getElementById('bookingForm');
+          bookingForm.addEventListener("submit",async(e)=>{
                
                e.preventDefault();
                const bookingForm  = document.getElementById("bookingForm");
@@ -74,6 +127,7 @@
                }
                obj['bookingDetails'] = bookingDetails;
 
+               if(totalPrice ==0 )  return alert("Select seats");
                if(confirm(`Book the Tickets ? Total Cost :${totalPrice}`)){
                               const result = await fetch('/api/v1/booking/new', {
                                    method: 'POST',
@@ -93,6 +147,81 @@
 
 
           });
+
+       
+          function searchMyFlights(){
+               // get the flights
+               const xhttp = new XMLHttpRequest();
+               const flightForm = document.getElementById('flightForm');
+
+               const form = new FormData(flightForm);
+
+               xhttp.onload = function() {
+                    const response = JSON.parse(this.responseText);
+                         renderData(response.flights, response.admin)
+               }
+               xhttp.open("GET", "/api/v1/flights?"+new URLSearchParams(form),true);
+               xhttp.setRequestHeader("Content-type", "application/json");
+               xhttp.setRequestHeader("Accept", "application/json");
+               xhttp.send(); 
+
+          }
+
+
+
+
+
+
+          function renderData (flights,admin=false){
+               const myflights =document.getElementById('myflights');
+               let res="";
+               console.log(flights);
+               if(!flights || flights===undefined || flights.length==0) {
+                    res+="<h1 >No Flights found</h1>";                    
+               }else{
+
+                    flights.map((flight)=>{
+                         res+=`                       
+                         <li class="list-group-item">
+                              <h3 class="airline">Airline Name :${flight.airline}</h3>
+                              <p class="flight-number">Flight Number: ${flight.flightNumber}</p>
+                              <p class="departure">Departure: ${flight.departureCity}</p>
+                              <p class="destination">Destination: ${flight.destinationCity}</p>
+                              <p class="time">Departure Time: ${new Date(flight.departureDate).toDateString()} 
+                                   ${new Date(flight.departureDate).toLocaleTimeString(undefined, {  hour: 'numeric',  minute: 'numeric',  hour12: true})}
+                              </p>
+                              <p class="time">Arrival Time:${new Date(flight.arrivalDate).toDateString() }  
+                                   ${new Date(flight.arrivalDate).toLocaleTimeString(undefined, {  hour: 'numeric',  minute: 'numeric',  hour12: true})}
+                              </p>
+                              <p class="time">Available Seats: ${flight.availableSeats}</p>
+                              <a href="/Booking?flightId=${flight._id}" class="btn btn-primary">Booking</a>
+                              ${admin ? `<button class="btn btn-danger" onclick="removeFlightRequest('${flight._id}')">Remove Flight</button>` : ''}
+                              </li>
+                         `
+               })
+               }
+               myflights.innerHTML= res ;
+
+                 
+               
+          }
+
+          async function removeFlightRequest(id){
+               if (confirm(`Do you want to remove this flight ${id}`)){
+                         const result  = await fetch(`/api/v1/admin/flights/${id}`,{
+                              method:'DELETE',
+                         }
+                              )
+                         if ( !result.ok){
+                                   alert("The Error Occured ..\nKindly Refresh the page and try again");
+                         }
+                         window.location.reload();
+               }
+          }
+    
+            
+
+
 </script>
 
               <!-- jQuery library -->
