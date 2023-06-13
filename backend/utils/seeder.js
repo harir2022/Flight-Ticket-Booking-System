@@ -11,9 +11,7 @@ const data =
           departureCity: "City 1",
           destinationCity: "City 2",
           departureDate: new Date("2023-06-01"),
-          departureTime: "10:00 AM",
           arrivalDate: new Date("2023-06-01"),
-          arrivalTime: "12:00 PM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -24,9 +22,7 @@ const data =
           departureCity: "City 2",
           destinationCity: "City 3",
           departureDate: new Date("2023-06-02"),
-          departureTime: "02:00 PM",
           arrivalDate: new Date("2023-06-02"),
-          arrivalTime: "04:00 PM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -37,9 +33,7 @@ const data =
           departureCity: "City 3",
           destinationCity: "City 4",
           departureDate: new Date("2023-06-03"),
-          departureTime: "08:00 AM",
           arrivalDate: new Date("2023-06-03"),
-          arrivalTime: "10:00 AM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -50,9 +44,7 @@ const data =
           departureCity: "City 4",
           destinationCity: "City 5",
           departureDate: new Date("2023-06-04"),
-          departureTime: "01:00 PM",
           arrivalDate: new Date("2023-06-04"),
-          arrivalTime: "03:00 PM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -63,9 +55,7 @@ const data =
           departureCity: "City 5",
           destinationCity: "City 6",
           departureDate: new Date("2023-06-05"),
-          departureTime: "09:00 AM",
           arrivalDate: new Date("2023-06-05"),
-          arrivalTime: "11:00 AM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -76,9 +66,7 @@ const data =
           departureCity: "City 6",
           destinationCity: "City 7",
           departureDate: new Date("2023-06-06"),
-          departureTime: "03:00 PM",
           arrivalDate: new Date("2023-06-06"),
-          arrivalTime: "05:00 PM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -89,9 +77,7 @@ const data =
           departureCity: "City 7",
           destinationCity: "City 8",
           departureDate: new Date("2023-06-07"),
-          departureTime: "11:00 AM",
           arrivalDate: new Date("2023-06-07"),
-          arrivalTime: "01:00 PM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID
@@ -102,9 +88,7 @@ const data =
           departureCity: "City 8",
           destinationCity: "City 9",
           departureDate: new Date("2023-06-08"),
-          departureTime: "04:00 PM",
           arrivalDate: new Date("2023-06-08"),
-          arrivalTime: "06:00 PM",
           availableSeats: 60,
           seats: [], // Add seat data here
           createdByUser: "6478c3b00b0b9faaffcf2777", // Replace with the actual user ID

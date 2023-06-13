@@ -42,26 +42,26 @@ Router.get(['/register'],(req,res)=>{
      })
      
      
-Router.get(['/search'],isLoginUser,(req,res)=>{
-     const user = req.user;
-     res.render("SearchFlight",{
-          done:false,
-          Name: user && user.name,
-          Email: user && user.email,
-          Nationality: user && user.nationality,
-          admin: user &&   (user.role==='admin')
-     })
-     })
-Router.get(['/Booking'],isAuthenticatedUser,async(req,res,next )=>{
+// Router.get(['/search'],isLoginUser,(req,res)=>{
+//      const user = req.user;
+//      res.render("SearchFlight",{
+//           done:false,
+//           Name: user && user.name,
+//           Email: user && user.email,
+//           Nationality: user && user.nationality,
+//           admin: user &&   (user.role==='admin')
+//      })
+//      })
+Router.get(['/Booking','/search'],isLoginUser,async(req,res,next )=>{
      const flightId = req.query.flightId;
      const user = req.user;
      const flight = await FLIGHT.findById(flightId);
      if(!flight || flight==null) 
-     return res.render("Booking",{ 
-          Name: user && user.name,
-          Email: user && user.email,
-          Nationality: user && user.nationality,
-               admin: user &&   (user.role==='admin')});
+          return res.render("Booking",{ 
+               Name: user && user.name,
+               Email: user && user.email,
+               Nationality: user && user.nationality,
+                    admin: user &&   (user.role==='admin')});
      // console.log(flight)
      res.render("Booking",{
           flightId: flightId,
@@ -103,7 +103,7 @@ Router.get(['/Booking'],isAuthenticatedUser,async(req,res,next )=>{
       Router.get(['/UpdateFlights' ,'/UpdateFlights/:id'],isAuthenticatedUser,isAuthenticatedRole("admin"),async(req, res) => {
            const user = req.user;
            if(req.params.id===undefined || !req.params.id || !isObjectIdOrHexString(req.params.id ))
-                    return res.render('Admin/AddFlights',{
+                    return res.render('Booking',{
                          Name: user && user.name,
                          Email: user && user.email,
                          Nationality: user && user.nationality,
@@ -117,6 +117,7 @@ Router.get(['/Booking'],isAuthenticatedUser,async(req,res,next )=>{
                Email: user && user.email,
                Nationality: user && user.nationality,
                admin: user &&   (user.role==='admin'),
+               _id:req.params.id,
                airline: flight && flight.airline,
                flightNumber: flight && flight.flightNumber,
                departureCity: flight && flight.departureCity,
@@ -126,13 +127,14 @@ Router.get(['/Booking'],isAuthenticatedUser,async(req,res,next )=>{
                arrivalDate: flight && flight.arrivalDate,
                arrivalTime: flight && flight.arrivalTime,
                availableSeats: flight && flight.availableSeats,
+               edit:true,
           });
       });
  
       Router.get(['/RemoveFlights' ,'/RemoveFlights/:id'],isLoginUser,isAuthenticatedRole("admin"),async(req, res) => {
            const user = req.user;
            if(req.params.id===undefined || !req.params.id || !isObjectIdOrHexString(req.params.id ))
-                    return res.render('SearchFlight',{
+                    return res.render('Booking',{
                          Name: user && user.name,
                          Email: user && user.email,
                          Nationality: user && user.nationality,
@@ -141,7 +143,7 @@ Router.get(['/Booking'],isAuthenticatedUser,async(req,res,next )=>{
 
           const flight =await FLIGHT.findById(req.params.id);
           
-          res.render('SearchFlight',{
+          res.render('Booking',{
                Name: user && user.name,
                Email: user && user.email,
                Nationality: user && user.nationality,

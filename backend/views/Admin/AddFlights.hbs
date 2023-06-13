@@ -11,7 +11,7 @@
      {{> Navbar}}
      
         <div class="container">
-          <form action="/api/v1/admin/flights/new" method="post" id="form">
+          <form action="/api/v1/admin/flights/new" method="post" id="flightForm">
           <label class="form-label"  for="airline">Airline</label>
                          <input class="form-control" type="text" name="airline" value="{{airline}}"/><br/>
                          <label class="form-label"  for="flightNumber">flightNumber</label>
@@ -21,16 +21,21 @@
                          <label class="form-label"  for="arrrivalCity">arrrivalCity</label>
                          <input class="form-control" type="text" name="destinationCity" value="{{destinationCity}}"/><br/>
                          <label class="form-label"  for="departureDate">departureDate</label>
-                         <input class="form-control" type="datetime-local" name="departureDate" value="{{departureDate}}"/><br/>
+                         <input class="form-control" type="datetime-local" name="departureDate" value="{{formatDate departureDate}}"/><br/>
                          <label class="form-label"  for="arrivalDate">arrivalDate</label>
-                         <input class="form-control" type="datetime-local" name="arrivalDate" value="{{departureTime}}"/><br/>
-                         <label class="form-label"  for="departureTime">departureTime</label>
-                         <input class="form-control" type="time" name="departureTime" value="{{arrivalDate}}"/><br/>
+                         <input class="form-control" type="datetime-local" name="arrivalDate" value="{{formatDate arrivalDate}}"/><br/>
+                         {{!-- <label class="form-label"  for="departureTime">departureTime</label>
+                         <input class="form-control" type="time" name="departureTime" value="{{formatTime departureTime}}"/><br/>
                          <label class="form-label"  for="arrivalTime">arrivalTime</label>
-                         <input class="form-control" type="time" name="arrivalTime" value="{{arrivalTime}}"/><br/>
+                         <input class="form-control" type="time" name="arrivalTime" value="{{formatTime arrivalTime}}"/><br/> --}}
                          <label class="form-label"  for="availableSeats">availableSeats</label>
                          <input class="form-control" type="number" name="availableSeats" value="{{availableSeats}}"/><br/>
-                         <input type="submit" value="Add">
+                         <h1 id="modal"></h1>                      
+                         {{#if edit}}
+                         <input type="button" value="Update" class="btn btn-primary" onclick="updateFlight(`{{_id}}`)">   
+                         {{else}}                         
+                         <input type="submit" value="Add" class="btn btn-primary">
+                         {{/if}}
           </form>
                        
           </div>
@@ -40,7 +45,7 @@
      document.addEventListener("submit",async (e)=>{
           e.preventDefault();
 
-          const formData = new FormData(form);
+          const formData = new FormData(flightForm);
           const payload = {};
           for (let [key, value] of formData.entries()) {
           payload[key] = value;
@@ -58,8 +63,34 @@
                     console.log(result.toString());
                     alert("Those Flights Can't be added!\nKindly Refresh the page");
           }
+           document.getElementById('modal').innerText ="Added successfully"
+          setTimeout(function() {document.getElementById('modal').innerText=""},3000);
           window.location.reload();
      });
+
+     function updateFlight(id){
+               const xhttp = new XMLHttpRequest();
+               const flightForm = document.getElementById('flightForm');
+
+               const form = new FormData(flightForm);
+
+               xhttp.onload = function() {
+                         const response = JSON.parse(this.responseText);
+                         document.getElementById('modal').innerText ="Updated successfully"
+                         setTimeout(function() {document.getElementById('modal').innerText=""},3000);
+               }
+               xhttp.open("PUT", `/api/v1/admin/flights/${id}`,true);
+               xhttp.setRequestHeader("Content-type", "application/json");
+               xhttp.setRequestHeader("Accept", "application/json");
+               const requestBody = {};
+               form.forEach((value, key) => {
+               requestBody[key] = value;
+               });
+               xhttp.send(JSON.stringify(requestBody)); 
+     }
+
+
+
 </script>
 
 

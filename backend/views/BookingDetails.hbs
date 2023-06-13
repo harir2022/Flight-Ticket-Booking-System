@@ -46,43 +46,7 @@
 
    
 <script>
-          document.addEventListener("submit",async(e)=>{
-               
-               e.preventDefault();
-               const bookingForm  = document.getElementById("bookingForm");
-
-               const obj ={};
-               obj["flightId"]=document.getElementById('flightId').value;
-               let bookingDetails=[];
-               let totalPrice =0;
-               for(const book of bookingForm){
-                    if(book.checked){
-                         const t = JSON.parse(book.value);
-                         totalPrice += t.price;
-                         bookingDetails.push({requestedClass:t.class,requestedSeatNumber:t.seatNumber});
-                    }
-               }
-               obj['bookingDetails'] = bookingDetails;
-
-               if(confirm(`Book the Tickets ? Total Cost :${totalPrice}`)){
-                              const result = await fetch('/api/v1/booking/new', {
-                                   method: 'POST',
-                                   headers: {
-                                        'Content-Type': 'application/json'
-                                   },
-                                   body: JSON.stringify(obj)
-                              })
-                              
-                              if ( !result.ok){
-                                   alert("Those Ticket are already booked!\nKindly Refresh the page");
-                              }
-                                   window.location.reload();                                                                  
-                              
-
-               }
-
-
-          });
+      
 </script>
 
               <!-- jQuery library -->
