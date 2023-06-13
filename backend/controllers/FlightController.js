@@ -79,11 +79,19 @@ exports.updateFlight = CatchAsyncError( async (req, res,next) => {
      const flight = await  FLIGHT.findByIdAndUpdate(req.params.id,req.body,{
           new:true,
           runValidators:true,
-          useFindAndModify:false
+          useFindAndModify:false,
+          
       });
-
+      
       if(!flight)
                return next(new ErrorHandler('No flight found',404));
+          
+     // Update the seats array based on the updated availableSeats
+     if (flight.availableSeats !== req.body.availableSeats) {
+          
+          flight.markModified('seats'); // Mark the 'seats' array as modified
+          await flight.save(); // Save the flight with updated seats
+     }
 
       res.json({
           success:true,

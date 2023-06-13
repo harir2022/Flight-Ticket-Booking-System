@@ -31,6 +31,7 @@
 <script>
      const bookingsList = document.querySelector('#bookingsList');
      function updateList(bookings) {
+          console.log(bookings)
           bookingList.innerHTML = "";
           bookings.forEach(function(booking, index) {
                          const row = document.createElement("tr");

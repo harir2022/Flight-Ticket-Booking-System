@@ -24,18 +24,18 @@ const FLIGHTSCHEMA =  mongoose.Schema({
     type: Date,
     required: [true,'Please enter the departure date ']
   },
-  departureTime: {
-    type: String,
-    required: [true,'Please enter the departure time ']
-  },
+  // departureTime: {
+  //   type: String,
+  //   required: [true,'Please enter the departure time ']
+  // },
   arrivalDate: {
     type: Date,
     required: [true,'Please enter the arrival Date ']
   },
-  arrivalTime: {
-    type: String,
-    required: [true,'Please enter the arrival Time ']
-  },
+  // arrivalTime: {
+  //   type: String,
+  //   required: [true,'Please enter the arrival Time ']
+  // },
   availableSeats: {
     type: Number,
     default: 60 
@@ -55,7 +55,9 @@ createdByUser:{
 
 FLIGHTSCHEMA.pre('validate', function (next) {
   try {
-    if (this.isNew) {
+    
+    if (this.isNew || this.isModified('seats')) {
+    
       const seats = [];
       for (let i = 1; i <= Math.ceil(this.availableSeats*0.5 ); i++) {
         seats.push({
@@ -84,6 +86,7 @@ FLIGHTSCHEMA.pre('validate', function (next) {
       }
       this.seats = seats;
     }
+    
     
     next();
   } catch (error) {
